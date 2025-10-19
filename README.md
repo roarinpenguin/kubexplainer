@@ -1,4 +1,4 @@
-# 🚀 Kubernetes YAML Explainer
+# 🚀 KubExplainer: a simple Kubernetes YAML Explainer
 
 <div align="center">
 
