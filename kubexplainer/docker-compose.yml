@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      # Persistent volume for database and settings
+      - app-data:/app/data
+    environment:
+      - PORT=8080
+      - DATABASE_URL=sqlite+aiosqlite:///./data/app.db
+      # Set a custom encryption key for production (change this!)
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY:-kubernetes-yaml-explainer-change-me-in-production}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  app-data:
+    driver: local
